@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/navbar/Navbar";
 import Container from "@/components/global/Container";
+import Providers from "./providers";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -34,11 +35,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         "font-sans",
         figtree.variable,
       )}
-      suppressHydrationWarning={true}
+      suppressHydrationWarning="true"
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        <Container className="py-20">{children}</Container>
+        <Providers>
+          <Navbar />
+          <Container className="py-20">{children}</Container>
+        </Providers>
       </body>
     </html>
   );

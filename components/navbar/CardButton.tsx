@@ -7,7 +7,7 @@ const CardButton = () => {
   const numItemsInCart = 9;
   return (
     <Button
-      asChild
+      aschild="true"
       variant="outline"
       size="icon"
       className="flex justify-center items-center relative"
