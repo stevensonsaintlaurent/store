@@ -5,6 +5,7 @@ import NavSearch from "./NavSearch";
 import { CardAction } from "../ui/card";
 import CardButton from "./CardButton";
 import DarkMode from "./DarkMode";
+import LinksDropdown from "./LinksDropdown";
 
 const Navbar = () => {
   return (
@@ -15,6 +16,7 @@ const Navbar = () => {
         <div className="flex gap-4 items-center ">
           <CardButton />
           <DarkMode />
+          <LinksDropdown />
         </div>
       </Container>
     </nav>

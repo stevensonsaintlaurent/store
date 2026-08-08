@@ -1,9 +1,25 @@
-import React from 'react'
+import db from "@/utils/db";
 
-export default function AbouPage() {
+async function AboutPage() {
+  const profile = db.user.create({
+    data: {
+      name: "random name",
+      email: "sdfdfs@",
+    },
+  });
+
+  const users = await db.user.findMany();
+
   return (
     <div>
-      about page 
+      {users.map((user) => {
+        return (
+          <h2 key={user.id} className="text-2xl font-bold">
+            {user.name}
+          </h2>
+        );
+      })}
     </div>
-  )
+  );
 }
+export default AboutPage;
