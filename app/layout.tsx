@@ -35,7 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         "font-sans",
         figtree.variable,
       )}
-      suppressHydrationWarning="true"
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
         <Providers>

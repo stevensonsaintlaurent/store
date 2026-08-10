@@ -1,27 +1,10 @@
-// const { PrismaClient } = require("@prisma/client");
-// const products = require("./products.json");
-// const prisma = new PrismaClient();
-
-// async function main() {
-//   for (const product of products) {
-//     await prisma.product.create({
-//       data: product,
-//     });
-//   }
-// }
-// main()
-//   .then(async () => {
-//     await prisma.$disconnect();
-//   })
-//   .catch(async (e) => {
-//     console.error(e);
-//     await prisma.$disconnect();
-//     process.exit(1);
-//   });
-
 const { PrismaClient } = require("@prisma/client");
 const { PrismaPg } = require("@prisma/adapter-pg");
 const products = require("./products.json");
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is not defined");
+}
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -32,20 +15,25 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
-  // Your seed code here
+  console.log(`Found ${products.length} products`);
+
   for (const product of products) {
-    prisma.product.create({
+    const created = await prisma.product.create({
       data: product,
     });
+
+    console.log(`Created: ${created.name}`);
   }
+
+  console.log("✅ Seed completed successfully!");
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
+  .catch((error) => {
+    console.error("❌ Seed failed:");
+    console.error(error);
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });

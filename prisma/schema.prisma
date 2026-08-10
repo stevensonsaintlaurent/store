@@ -8,7 +8,7 @@ datasource db {
 
 model Product {
   id          String   @id @default(uuid())
-  name        String
+  name        String   @unique
   company     String
   description String
   featured    Boolean
