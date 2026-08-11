@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const { PrismaClient } = require("@prisma/client");
 const { PrismaPg } = require("@prisma/adapter-pg");
 const products = require("./products.json");
@@ -19,19 +21,21 @@ async function main() {
 
   for (const product of products) {
     const created = await prisma.product.create({
-      data: product,
+      data: {
+        ...product,
+        clerkId: product.clerkId || "clerkId",
+      },
     });
 
     console.log(`Created: ${created.name}`);
   }
 
-  console.log("✅ Seed completed successfully!");
+  console.log("Seed completed successfully!");
 }
 
 main()
   .catch((error) => {
-    console.error("❌ Seed failed:");
-    console.error(error);
+    console.error("Seed failed:", error);
     process.exit(1);
   })
   .finally(async () => {
