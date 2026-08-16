@@ -1,7 +1,7 @@
 import React from "react";
 import ProductsContainer from "./../../components/products/ProductsContainer";
 
-const ProductsPage = ({
+const ProductsPage = async ({
   searchParams,
 }: {
   searchParams: { layout?: string; search?: string };
