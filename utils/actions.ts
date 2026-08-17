@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import db from "./db";
 
 export const fetchFeaturedProducts = async () => {
@@ -6,19 +7,44 @@ export const fetchFeaturedProducts = async () => {
       featured: true,
     },
   });
+
   return products;
 };
 
-export const fetchAllProducts = ({ search = "" }: { search: string }) => {
+export const fetchAllProducts = ({
+  search = "",
+}: {
+  search?: string;
+} = {}) => {
   return db.product.findMany({
     where: {
       OR: [
-        { name: { contains: search, mode: "insensitive" } },
-        { company: { contains: search, mode: "insensitive" } },
+        {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          company: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
       ],
     },
     orderBy: {
       createdAt: "desc",
     },
   });
+};
+
+export const fetchSingleProduct = async (productId: string) => {
+  const product = await db.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+  if (!product) redirect("/products");
+  return product;
 };
