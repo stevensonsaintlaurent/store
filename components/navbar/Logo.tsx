@@ -5,7 +5,7 @@ import { VscCode } from "react-icons/vsc";
 
 const Logo = () => {
   return (
-    <Button size="icon" aschild="true">
+    <Button size="icon" asChild="true">
       <Link href="/">
         <VscCode className="w-6 h-6" />
       </Link>
