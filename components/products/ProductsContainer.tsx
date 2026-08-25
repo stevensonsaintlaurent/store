@@ -4,6 +4,7 @@ import ProductsList from "./ProductsList";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { LuLayoutGrid } from "react-icons/lu";
+
 async function ProductsContainer({
   layout,
   search,
@@ -23,26 +24,34 @@ async function ProductsContainer({
           <h4 className="font-medium text-lg">
             {totalProducts} product{totalProducts > 1 && "s"}
           </h4>
-          <div className="flex gap-x-4">
-            <Button variant={layout === "grid" ? "default" : "ghost"} asChild>
-              <Link href={`/products?layout=grid${searchTerm}`}>
-                <LuLayoutGrid />
-              </Link>
-            </Button>
 
-            <Button variant={layout === "list" ? "default" : "ghost"} asChild>
-              <Link href={`/products?layout=list${searchTerm}`}>
-                <LuLayoutGrid />
-              </Link>
-            </Button>
+          <div className="flex gap-x-4">
+            <Button
+              variant={layout === "grid" ? "default" : "ghost"}
+              render={
+                <Link href={`/products?layout=grid${searchTerm}`}>
+                  <LuLayoutGrid />
+                </Link>
+              }
+            />
+
+            <Button
+              variant={layout === "list" ? "default" : "ghost"}
+              render={
+                <Link href={`/products?layout=list${searchTerm}`}>
+                  <LuLayoutGrid />
+                </Link>
+              }
+            />
           </div>
         </div>
       </section>
+
       {/* PRODUCTS */}
       <div>
         {totalProducts === 0 ? (
           <h5 className="text-2xl mt-16">
-            Sorry,no products matched your search{" "}
+            Sorry, no products matched your search
           </h5>
         ) : layout === "grid" ? (
           <ProductsGrid products={products} />

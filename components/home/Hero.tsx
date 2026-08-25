@@ -10,6 +10,7 @@ const Hero = () => {
         <h2 className="max-w-2xl font-bold text-4xl tracking-tight sm:text-6xl">
           We are changing the way people shop
         </h2>
+
         <p className="mt-8 max-w-xl text-lg leading-8 text-muted-foreground">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Excepturi
           consequatur magnam iure repudiandae nihil cumque illum, repellat
@@ -17,9 +18,12 @@ const Hero = () => {
           architecto rem quam blanditiis eos alias, cum earum vitae impedit
           error debitis vero! Quibusdam, voluptatem eum.
         </p>
-        <Button asChild size="lg" className="mt-10">
-          <Link href="/products">Our Products</Link>
-        </Button>
+
+        <Button
+          size="lg"
+          className="mt-10"
+          render={<Link href="/products">Our Products</Link>}
+        />
       </div>
 
       <HeroCarousel />
