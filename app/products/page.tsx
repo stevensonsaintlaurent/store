@@ -1,7 +1,6 @@
-import React from "react";
-import ProductsContainer from "./../../components/products/ProductsContainer";
+import ProductsContainer from "@/components/products/ProductsContainer";
 
-const ProductsPage = async ({
+const ProductsPage = ({
   searchParams,
 }: {
   searchParams: { layout?: string; search?: string };
@@ -11,5 +10,3 @@ const ProductsPage = async ({
 
   return <ProductsContainer layout={layout} search={search} />;
 };
-
-export default ProductsPage;
