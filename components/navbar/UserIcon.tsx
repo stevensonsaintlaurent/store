@@ -3,6 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { LuUser } from "react-icons/lu";
 
+console.log("user");
 const UserIcon = () => {
   const { isLoaded, isSignedIn, user } = useUser();
 
