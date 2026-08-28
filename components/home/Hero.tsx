@@ -1,13 +1,16 @@
+"use client";
+
 import React from "react";
-import { Button } from "../ui/button";
 import Link from "next/link";
+
+import { buttonVariants } from "../ui/button";
 import HeroCarousel from "./HeroCarousel";
 
 const Hero = () => {
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-2 gap-24">
+    <section className="grid grid-cols-1 gap-24 lg:grid-cols-2">
       <div>
-        <h2 className="max-w-2xl font-bold text-4xl tracking-tight sm:text-6xl">
+        <h2 className="max-w-2xl text-4xl font-bold tracking-tight sm:text-6xl">
           We are changing the way people shop
         </h2>
 
@@ -19,11 +22,14 @@ const Hero = () => {
           error debitis vero! Quibusdam, voluptatem eum.
         </p>
 
-        <Button
-          size="lg"
-          className="mt-10"
-          render={<Link href="/products">Our Products</Link>}
-        />
+        <Link
+          href="/products"
+          className={`${buttonVariants({
+            size: "lg",
+          })} mt-10`}
+        >
+          Our Products
+        </Link>
       </div>
 
       <HeroCarousel />

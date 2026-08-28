@@ -1,16 +1,32 @@
-import { LuUser2 } from "react-icons/lu";
-import { currentUser } from "@clerk/nextjs/server";
+"use client";
 
-const UserIcon = async () => {
-  const user = await currentUser();
+import { useUser } from "@clerk/nextjs";
+import { LuUser } from "react-icons/lu";
 
-  const profileImage = user?.imageUrl;
-  if (profileImage) {
-    return (
-      <img src={profileImage} className="w-6 h-6 rounded-full object-cover" />
-    );
+const UserIcon = () => {
+  const { isLoaded, isSignedIn, user } = useUser();
+
+  if (!isLoaded) {
+    return <LuUser className="h-5 w-5" />;
   }
-  return <LuUser2 className="w-6 h-6 bg-primary rounded-full text-white" />;
+
+  if (!isSignedIn || !user) {
+    return <LuUser className="h-5 w-5" />;
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      {user.imageUrl ? (
+        <img
+          src={user.imageUrl}
+          alt={user.fullName || "User"}
+          className="h-6 w-6 rounded-full object-cover"
+        />
+      ) : (
+        <LuUser className="h-5 w-5" />
+      )}
+    </div>
+  );
 };
 
 export default UserIcon;

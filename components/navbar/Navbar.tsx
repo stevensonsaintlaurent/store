@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import Container from "../global/Container";
 import Logo from "./Logo";
 import NavSearch from "./NavSearch";
-import { CardAction } from "../ui/card";
 import CardButton from "./CardButton";
 import DarkMode from "./DarkMode";
 import LinksDropdown from "./LinksDropdown";
@@ -10,12 +9,14 @@ import LinksDropdown from "./LinksDropdown";
 const Navbar = () => {
   return (
     <nav className="border-b">
-      <Container className="flex flex-col sm:flex-row sm:justify-between sm:items-center flex-wrap py-8">
+      <Container className="flex flex-wrap flex-col py-8 sm:flex-row sm:items-center sm:justify-between">
         <Logo />
+
         <Suspense>
           <NavSearch />
         </Suspense>
-        <div className="flex gap-4 items-center ">
+
+        <div className="flex items-center gap-4">
           <CardButton />
           <DarkMode />
           <LinksDropdown />
