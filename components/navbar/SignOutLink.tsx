@@ -4,6 +4,8 @@ import { SignOutButton } from "@clerk/nextjs";
 import { toast } from "../ui/toast";
 import Link from "next/link";
 
+console.log("le jour du sinOutLink");
+
 const SignOutLink = () => {
   const handleLogount = () => {
     toast.add({ description: "Logout Successful" });
