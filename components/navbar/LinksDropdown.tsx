@@ -16,9 +16,26 @@ import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import SignOutLink from "./SignOutLink";
 
 function LinksDropdown() {
-  const { userId } = useAuth();
-  const isAdmin = userId === process.env.ADMIN_USER_ID;
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, isLoaded } = useAuth();
+
+  if (!isLoaded) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={
+            <Button variant="outline" className="flex max-w-[100px] gap-4" />
+          }
+        >
+          <LuAlignLeft className="h-6 w-6" />
+          <UserIcon />
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent className="w-40" align="start" sideOffset={10}>
+          <DropdownMenuItem disabled>Loading...</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 
   return (
     <DropdownMenu>
@@ -36,7 +53,9 @@ function LinksDropdown() {
           <>
             <DropdownMenuItem>
               <SignInButton mode="modal">
-                <button className="w-full text-left">Login</button>
+                <button type="button" className="w-full text-left">
+                  Login
+                </button>
               </SignInButton>
             </DropdownMenuItem>
 
@@ -44,7 +63,9 @@ function LinksDropdown() {
 
             <DropdownMenuItem>
               <SignUpButton mode="modal">
-                <button className="w-full text-left">Register</button>
+                <button type="button" className="w-full text-left">
+                  Register
+                </button>
               </SignUpButton>
             </DropdownMenuItem>
           </>
