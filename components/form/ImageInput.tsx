@@ -1,8 +1,6 @@
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 
-import React from "react";
-
 const ImageInput = () => {
   const name = "image";
   return (
@@ -10,7 +8,7 @@ const ImageInput = () => {
       <Label htmlFor={name} className="capitalize">
         Image
       </Label>
-      <Input id={name} name={name} type="file" accept="image/*" />
+      <Input id={name} name={name} type="file" accept="image/*" required />
     </div>
   );
 };
