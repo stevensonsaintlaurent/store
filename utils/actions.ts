@@ -73,9 +73,7 @@ export const createProductAction = async (
   try {
     const name = formData.get("name") as string;
     const company = formData.get("company") as string;
-    const price = parseFloat(formData.get("price") as string);
-
-    // temp
+    const price = Number(formData.get("price") as string);
     const image = formData.get("image") as File;
     const description = formData.get("description") as string;
     const featured = Boolean(formData.get("featured") as string);
@@ -84,17 +82,15 @@ export const createProductAction = async (
       data: {
         name,
         company,
-        description,
         price,
-        image: "/images/product-1.jpg",
+        image: "/images/test.png",
+        description,
         featured,
         clerkId: user.id,
       },
     });
-
-    return { message: "Product created successfully" };
+    return { message: "product created" };
   } catch (error) {
-    console.log("Error creating product:", error);
     return renderError(error);
   }
 };
