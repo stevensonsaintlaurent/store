@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import db from "./db";
 import { currentUser } from "@clerk/nextjs/server";
 import { productSchema } from "./schemas";
+import { validateWithSchema } from "./schemas";
 
 const getAuthUser = async () => {
   const user = await currentUser();
@@ -73,7 +74,15 @@ export const createProductAction = async (
   const user = await getAuthUser();
   try {
     const rawData = Object.fromEntries(formData);
-    const validatedFields = productSchema.parse(rawData);
+    const validatedFields = validateWithSchema(productSchema, rawData);
+    await db.product.create({
+      data: {
+        ...validatedFields,
+        image: "/images/test.png",
+        clerkId: user.id,
+      },
+    });
+
     return { message: "product created" };
   } catch (error) {
     return renderError(error);
