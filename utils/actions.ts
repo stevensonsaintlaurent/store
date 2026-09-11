@@ -120,7 +120,7 @@ export const deleteProductAction = async (prevState: { productId: string }) => {
       },
     });
     revalidatePath("/admin/products");
-    return { message: "product remoded" };
+    return { message: "product removed" };
   } catch (error) {
     return renderError(error);
   }
