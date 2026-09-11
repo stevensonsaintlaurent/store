@@ -3,12 +3,18 @@
 import { redirect } from "next/navigation";
 import db from "./db";
 import { currentUser } from "@clerk/nextjs/server";
-import { imageSchema, productSchema } from "./schemas";
-import { validateWithSchema } from "./schemas";
+import { imageSchema, productSchema, validateWithZodSchema } from "./schemas";
+import { uploadImage } from "./supabase";
 
 const getAuthUser = async () => {
   const user = await currentUser();
   if (!user) redirect("/");
+  return user;
+};
+
+const getAdminUser = async () => {
+  const user = await getAuthUser();
+  if (user.id !== process.env.ADMIN_USER_ID) redirect("/");
   return user;
 };
 
@@ -75,18 +81,29 @@ export const createProductAction = async (
   try {
     const rawData = Object.fromEntries(formData);
     const file = formData.get("image") as File;
-    const validatedFields = validateWithSchema(productSchema, rawData);
-    const validateFile = validateWithSchema(imageSchema, { image: file });
+    const validatedFields = validateWithZodSchema(productSchema, rawData);
+    const validateFile = validateWithZodSchema(imageSchema, { image: file });
+    const fullPath = await uploadImage(validateFile.image);
     await db.product.create({
       data: {
         ...validatedFields,
-        image: "/images/test.png",
+        image: fullPath,
         clerkId: user.id,
       },
     });
-
-    return { message: "product created" };
   } catch (error) {
     return renderError(error);
   }
+
+  redirect("/admin/products");
+};
+
+export const fetchAdminProducts = async () => {
+  await getAdminUser();
+  const products = await db.product.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return products;
 };
