@@ -6,6 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { imageSchema, productSchema, validateWithZodSchema } from "./schemas";
 import { deleteImage, uploadImage } from "./supabase";
 import { revalidatePath } from "next/cache";
+import FavoriteToggleButton from "./../components/products/FavoriteToggleButton";
 
 const getAuthUser = async () => {
   const user = await currentUser();
@@ -195,4 +196,24 @@ export const updateProductImageAction = async (
   } catch (error) {
     return renderError(error);
   }
+};
+
+export const fetchFavorite = async ({ productId }: { productId: string }) => {
+  const user = await getAuthUser();
+  const favorite = await db.favorite.findFirst({
+    where: {
+      productId,
+      clerkId: user.id,
+    },
+
+    select: {
+      id: true,
+    },
+  });
+
+  return favorite?.id || null;
+};
+
+export const toggleFavoriteAction = async () => {
+  return { message: "toggle favorite action" };
 };
