@@ -7,6 +7,7 @@ import { imageSchema, productSchema, validateWithZodSchema } from "./schemas";
 import { deleteImage, uploadImage } from "./supabase";
 import { revalidatePath } from "next/cache";
 import FavoriteToggleButton from "./../components/products/FavoriteToggleButton";
+import { includes } from "zod";
 
 const getAuthUser = async () => {
   const user = await currentUser();
@@ -198,19 +199,17 @@ export const updateProductImageAction = async (
   }
 };
 
-export const fetchFavorite = async ({ productId }: { productId: string }) => {
+export const fetchFavoriteId = async ({ productId }: { productId: string }) => {
   const user = await getAuthUser();
   const favorite = await db.favorite.findFirst({
     where: {
       productId,
       clerkId: user.id,
     },
-
     select: {
       id: true,
     },
   });
-
   return favorite?.id || null;
 };
 
@@ -221,7 +220,6 @@ export const toggleFavoriteAction = async (prevState: {
 }) => {
   const user = await getAuthUser();
   const { productId, favoriteId, pathname } = prevState;
-
   try {
     if (favoriteId) {
       await db.favorite.delete({
@@ -238,8 +236,22 @@ export const toggleFavoriteAction = async (prevState: {
       });
     }
     revalidatePath(pathname);
-    return { message: favoriteId ? "removed from faves" : "added to faves" };
+    return { message: favoriteId ? "Removed from Faves" : "Added to Faves" };
   } catch (error) {
     return renderError(error);
   }
+};
+
+export const fetchUserFavorites = async () => {
+  const user = await getAuthUser();
+  const favorites = await db.favorite.findMany({
+    where: {
+      clerkId: user.id,
+    },
+    include: {
+      product: true,
+    },
+  });
+
+  return favorites;
 };

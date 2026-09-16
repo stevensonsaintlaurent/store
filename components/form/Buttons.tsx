@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { SignInButton } from "@clerk/nextjs";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { LuTrash2, LuSquarePen } from "react-icons/lu";
-import { type } from "./../../utils/types";
 
 type btnSize = "default" | "lg" | "sm";
 
@@ -89,10 +88,10 @@ export const CardSubmitButton = ({ isFavorite }: { isFavorite: boolean }) => {
       type="submit"
       size="icon"
       variant="outline"
-      className="p-2 cursor-pointer"
+      className=" p-2 cursor-pointer"
     >
       {pending ? (
-        <ReloadIcon className="animate-spin" />
+        <ReloadIcon className=" animate-spin" />
       ) : isFavorite ? (
         <FaHeart />
       ) : (
