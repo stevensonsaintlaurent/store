@@ -6,6 +6,8 @@ import FavoriteToggleButton from "@/components/products/FavoriteToggleButton";
 import AddToCart from "@/components/single-product/AddToCart";
 import ProductRating from "@/components/single-product/ProductRating";
 import ShareButton from "@/components/single-product/ShareButton";
+import ProductReviews from "@/components/reviews/ProductReviews";
+import SubmitReview from "@/components/reviews/SubmitReview";
 
 async function SingleProductPage({
   params,
@@ -63,6 +65,9 @@ async function SingleProductPage({
           <AddToCart productId={id} />
         </div>
       </div>
+
+      <ProductReviews productId={id} />
+      <SubmitReview productId={id} />
     </section>
   );
 }
