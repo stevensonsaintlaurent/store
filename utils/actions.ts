@@ -3,11 +3,14 @@
 import { redirect } from "next/navigation";
 import db from "./db";
 import { currentUser } from "@clerk/nextjs/server";
-import { imageSchema, productSchema, validateWithZodSchema } from "./schemas";
+import {
+  imageSchema,
+  productSchema,
+  reviewSchema,
+  validateWithZodSchema,
+} from "./schemas";
 import { deleteImage, uploadImage } from "./supabase";
 import { revalidatePath } from "next/cache";
-import FavoriteToggleButton from "./../components/products/FavoriteToggleButton";
-import { includes } from "zod";
 
 const getAuthUser = async () => {
   const user = await currentUser();
@@ -271,8 +274,35 @@ export const fetchUserFavorites = async () => {
 export const createReviewAction = async (
   prevState: any,
   formData: FormData,
-) => {
-  return { message: "review submitted successfully" };
+): Promise<{ message: string }> => {
+  const user = await getAuthUser();
+
+  try {
+    const rawData = Object.fromEntries(formData);
+
+    console.log("Review form data:", rawData);
+
+    const validatedFields = validateWithZodSchema(reviewSchema, rawData);
+
+    console.log("Validated review:", validatedFields);
+
+    await db.review.create({
+      data: {
+        ...validatedFields,
+        clerkId: user.id,
+      },
+    });
+
+    revalidatePath(`/products/${validatedFields.productId}`);
+
+    return {
+      message: "Review submitted successfully",
+    };
+  } catch (error) {
+    console.error("CREATE REVIEW ERROR:", error);
+
+    return renderError(error);
+  }
 };
 
 export const fetchProductReviews = async () => {};
