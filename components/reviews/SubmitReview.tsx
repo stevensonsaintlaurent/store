@@ -8,16 +8,15 @@ import TextAreaInput from "@/components/form/TextAreaInput";
 import { Button } from "@/components/ui/button";
 import { createReviewAction } from "@/utils/actions";
 import { useUser } from "@clerk/nextjs";
-
-const SubmitReview = ({ productId }: { productId: string }) => {
-  const [isReviewFormVisible, setIsReviewVisible] = useState(false);
+function SubmitReview({ productId }: { productId: string }) {
+  const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
   const { user } = useUser();
   return (
     <div>
       <Button
         size="lg"
         className="capitalize"
-        onClick={() => setIsReviewVisible((prev) => !prev)}
+        onClick={() => setIsReviewFormVisible((prev) => !prev)}
       >
         leave review
       </Button>
@@ -30,21 +29,23 @@ const SubmitReview = ({ productId }: { productId: string }) => {
               name="authorName"
               value={user?.firstName || "user"}
             />
-            <input type="hidden" name="authorImageUrl" value={user?.imageUrl} />
-
+            <input
+              type="hidden"
+              name="authorImageUrl"
+              value={user?.imageUrl || ""}
+            />
             <RatingInput name="rating" />
             <TextAreaInput
               name="comment"
               labelText="feedback"
-              defaultValue="outstanding product!!"
+              defaultValue="Outstanding product!!!"
             />
-
             <SubmitButton className="mt-4" />
           </FormContainer>
         </Card>
       )}
     </div>
   );
-};
+}
 
 export default SubmitReview;
