@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -18,26 +19,31 @@ const RatingInput = ({
     const value = i + 1;
     return value.toString();
   }).reverse();
+
+  const [rating, setRating] = useState(numbers[0]);
+
   return (
     <div className="mb-2 max-w-xs">
       <Label htmlFor={name} className="capitalize">
         {labelText || name}
       </Label>
 
-      <Select defaultValue={numbers[0]} required>
-        <SelectTrigger>
-          <SelectValue />
+      <Select value={rating} onValueChange={setRating} required>
+        <SelectTrigger id={name}>
+          <SelectValue placeholder="Select a rating" />
         </SelectTrigger>
+
         <SelectContent>
-          {numbers.map((number) => {
-            return (
-              <SelectItem key={number} value={number}>
-                {number}
-              </SelectItem>
-            );
-          })}
+          {numbers.map((number) => (
+            <SelectItem key={number} value={number}>
+              {number}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
+
+      {/* Native input that FormData can read */}
+      <input type="hidden" name={name} value={rating} />
     </div>
   );
 };

@@ -272,20 +272,39 @@ export const fetchUserFavorites = async () => {
   return favorites;
 };
 
+// export const createReviewAction = async (
+//   prevState: any,
+//   formData: FormData,
+// ) => {
+//   const user = await getAuthUser();
+//   try {
+//     const rawData = Object.fromEntries(formData);
+
+//     const validatedFields = validateWithZodSchema(reviewSchema, rawData);
+
+//     await db.review.create({
+//       data: {
+//         ...validatedFields,
+//         clerkId: user.id,
+//       },
+//     });
+//     revalidatePath(`/products/${validatedFields.productId}`);
+//     return { message: "Review submitted successfully" };
+//   } catch (error) {
+//     return renderError(error);
+//   }
+// };
+
 export const createReviewAction = async (
   prevState: any,
   formData: FormData,
-): Promise<{ message: string }> => {
-  const user = await getAuthUser();
-
+) => {
   try {
+    const user = await getAuthUser();
+
     const rawData = Object.fromEntries(formData);
 
-    console.log("Review form data:", rawData);
-
     const validatedFields = validateWithZodSchema(reviewSchema, rawData);
-
-    console.log("Validated review:", validatedFields);
 
     await db.review.create({
       data: {
@@ -300,8 +319,6 @@ export const createReviewAction = async (
       message: "Review submitted successfully",
     };
   } catch (error) {
-    console.error("CREATE REVIEW ERROR:", error);
-
     return renderError(error);
   }
 };
@@ -319,7 +336,7 @@ export const fetchProductReviews = async (productId: string) => {
 };
 
 export const fetchProductRating = async (productId: string) => {
-  const result = db.review.groupBy({
+  const result = await db.review.groupBy({
     by: ["productId"],
     _avg: {
       rating: true,
@@ -327,8 +344,12 @@ export const fetchProductRating = async (productId: string) => {
     _count: {
       rating: true,
     },
-    where: { productId },
+    where: {
+      productId,
+    },
   });
+
+  // empty array if no reviews
   return {
     rating: result[0]?._avg.rating?.toFixed(1) ?? 0,
     count: result[0]?._count.rating ?? 0,
@@ -338,7 +359,9 @@ export const fetchProductRating = async (productId: string) => {
 export const fetchProductReviewsByUser = async () => {
   const user = await getAuthUser();
   const reviews = await db.review.findMany({
-    where: { clerkId: user.id },
+    where: {
+      clerkId: user.id,
+    },
     select: {
       id: true,
       rating: true,
@@ -351,6 +374,7 @@ export const fetchProductReviewsByUser = async () => {
       },
     },
   });
+  console.log("review user", reviews);
   return reviews;
 };
 export const deleteReviewAction = async (prevState: { reviewId: string }) => {
@@ -371,4 +395,14 @@ export const deleteReviewAction = async (prevState: { reviewId: string }) => {
     return renderError(error);
   }
 };
-export const findExistingReviews = async () => {};
+export const findExistingReviews = async (
+  userId: string,
+  productId: string,
+) => {
+  return db.review.findFirst({
+    where: {
+      clerkId: userId,
+      productId,
+    },
+  });
+};

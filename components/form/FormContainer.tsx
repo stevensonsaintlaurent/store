@@ -1,15 +1,13 @@
 "use client";
 
-import { useFormState } from "react-dom";
 import { useActionState, useEffect } from "react";
+import { toast } from "@/components/ui/toast";
 
 import { actionFunction } from "@/utils/types";
 
 const initialState = {
   message: "",
 };
-
-import { toast } from "@/components/ui/toast";
 
 export default function FormContainer({
   action,
@@ -22,7 +20,9 @@ export default function FormContainer({
 
   useEffect(() => {
     if (state?.message) {
-      toast.add({ description: state.message });
+      toast.add({
+        description: state.message,
+      });
     }
   }, [state]);
 
