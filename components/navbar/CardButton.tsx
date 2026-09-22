@@ -1,21 +1,24 @@
 import Link from "next/link";
 import { LuShoppingCart } from "react-icons/lu";
-
-const CardButton = () => {
-  const numItemsInCart = 9;
+import { fetchCartItems } from "@/utils/actions";
+import { Button } from "@/components/ui/button";
+const CardButton = async () => {
+  const numItemsInCart = await fetchCartItems();
 
   return (
-    <Link
-      href="/cart"
-      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-4xl border border-border bg-input/30 transition-all hover:bg-input/50 hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 relative"
-      aria-label={`Shopping cart with ${numItemsInCart} items`}
+    <Button
+      variant="outline"
+      size="icon"
+      className="flex justify-center items-center relative"
     >
-      <LuShoppingCart className="h-4 w-4" />
+      <Link href="/cart">
+        <LuShoppingCart />
 
-      <span className="absolute -top-3 -right-3 bg-primary text-white rounded-full h-6 w-6 flex items-center justify-center text-xs">
-        {numItemsInCart}
-      </span>
-    </Link>
+        <span className="absolute -top-3 -right-3 bg-primary text-white rounded-full h-6 w-6 flex items-center justify-center text-xs">
+          {numItemsInCart}
+        </span>
+      </Link>
+    </Button>
   );
 };
 

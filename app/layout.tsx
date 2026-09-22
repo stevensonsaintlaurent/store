@@ -27,10 +27,15 @@ export const metadata: Metadata = {
   description: "A nefty store build with Next.js",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full",
         "antialiased",
@@ -39,17 +44,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         "font-sans",
         figtree.variable,
       )}
-      suppressHydrationWarning
     >
-      <ClerkProvider>
-        <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col">
+        <ClerkProvider>
           <Providers>
             <Navbar />
 
             <Container className="py-20">{children}</Container>
           </Providers>
-        </body>
-      </ClerkProvider>
+        </ClerkProvider>
+      </body>
     </html>
   );
 }
