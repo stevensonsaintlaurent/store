@@ -1,4 +1,4 @@
-import { z, ZodSchema } from "zod";
+import { z } from "zod";
 
 export const productSchema = z.object({
   name: z
@@ -49,37 +49,43 @@ function validateImageFile() {
     );
 }
 
-export function validateWithZodSchema<T>(
-  schema: ZodSchema<T>,
+export const validateWithZodSchema = <T>(
+  schema: z.ZodSchema<T>,
   data: unknown,
-): T {
+): T => {
   const result = schema.safeParse(data);
 
   if (!result.success) {
-    const errors = result.error.issues.map((error) => error.message);
-    throw new Error(errors.join(", "));
+    console.log("❌ Zod validation failed");
+    console.log("Data received:", data);
+    console.log(
+      "Zod issues:",
+      result.error.issues.map((issue) => ({
+        field: issue.path.join("."),
+        message: issue.message,
+        received: issue.code === "invalid_type" ? issue.received : undefined,
+      })),
+    );
+
+    throw new Error(
+      result.error.issues
+        .map(
+          (issue) =>
+            `${issue.path.join(".") || "unknown field"}: ${issue.message}`,
+        )
+        .join(", "),
+    );
   }
 
   return result.data;
-}
+};
 
 export const reviewSchema = z.object({
-  productId: z.string().refine((value) => value !== "", {
-    message: "Product ID cannot be empty",
+  productId: z.string(),
+  authorName: z.string(),
+  authorImage: z.string(),
+  rating: z.coerce.number().int().min(1).max(5),
+  comment: z.string().min(1, {
+    message: "Review comment is required",
   }),
-  authorName: z.string().refine((value) => value !== "", {
-    message: "Author name cannot be empty",
-  }),
-  authorImageUrl: z.string().refine((value) => value !== "", {
-    message: "Author image URL cannot be empty",
-  }),
-  rating: z.coerce
-    .number()
-    .int()
-    .min(1, { message: "Rating must be at least 1" })
-    .max(5, { message: "Rating must be at most 5" }),
-  comment: z
-    .string()
-    .min(10, { message: "Comment must be at least 10 characters long" })
-    .max(1000, { message: "Comment must be at most 1000 characters long" }),
 });

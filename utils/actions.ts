@@ -272,29 +272,6 @@ export const fetchUserFavorites = async () => {
   return favorites;
 };
 
-// export const createReviewAction = async (
-//   prevState: any,
-//   formData: FormData,
-// ) => {
-//   const user = await getAuthUser();
-//   try {
-//     const rawData = Object.fromEntries(formData);
-
-//     const validatedFields = validateWithZodSchema(reviewSchema, rawData);
-
-//     await db.review.create({
-//       data: {
-//         ...validatedFields,
-//         clerkId: user.id,
-//       },
-//     });
-//     revalidatePath(`/products/${validatedFields.productId}`);
-//     return { message: "Review submitted successfully" };
-//   } catch (error) {
-//     return renderError(error);
-//   }
-// };
-
 export const createReviewAction = async (
   prevState: any,
   formData: FormData,
@@ -319,6 +296,7 @@ export const createReviewAction = async (
       message: "Review submitted successfully",
     };
   } catch (error) {
+    console.log(error);
     return renderError(error);
   }
 };
@@ -408,7 +386,7 @@ export const findExistingReviews = async (
 };
 
 export const fetchCartItems = async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
   const cart = await db.cart.findFirst({
     where: {
       clerkId: userId ?? "",
@@ -417,6 +395,7 @@ export const fetchCartItems = async () => {
       numItemsInCart: true,
     },
   });
+  return cart?.numItemsInCart || 0;
 };
 
 const fetchProduct = async () => {};

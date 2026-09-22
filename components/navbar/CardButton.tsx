@@ -4,6 +4,7 @@ import { fetchCartItems } from "@/utils/actions";
 import { Button } from "@/components/ui/button";
 const CardButton = async () => {
   const numItemsInCart = await fetchCartItems();
+  console.log(" numItemsInCart", numItemsInCart);
 
   return (
     <Button

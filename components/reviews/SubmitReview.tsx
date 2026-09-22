@@ -55,13 +55,15 @@ function SubmitReview({ productId }: { productId: string }) {
             <input
               type="hidden"
               name="authorName"
-              value={user.firstName || user.username || user.fullName || "User"}
+              value={
+                user?.firstName || user?.username || user.fullName || "User"
+              }
             />
 
             <input
               type="hidden"
               name="authorImage"
-              value={user.imageUrl || ""}
+              value={user?.imageUrl || ""}
             />
 
             <RatingInput name="rating" />
