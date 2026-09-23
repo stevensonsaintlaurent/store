@@ -12,6 +12,7 @@ import {
 import { deleteImage, uploadImage } from "./supabase";
 import { revalidatePath } from "next/cache";
 import Rating from "./../components/reviews/Rating";
+import { Cart } from "@prisma/client";
 
 const getAuthUser = async () => {
   const user = await currentUser();
@@ -447,9 +448,39 @@ export const fetchOrCreateCart = async ({
   return cart;
 };
 
-const updateOrCreateCartItem = async () => {};
+const updateOrCreateCartItem = async ({
+  productId,
+  cartId,
+  amount,
+}: {
+  productId: string;
+  cartId: string;
+  amount: number;
+}) => {
+  let cartItem = await db.cartItem.findFirst({
+    where: {
+      productId,
+      cartId,
+    },
+  });
 
-export const updateCart = async () => {};
+  if (cartItem) {
+    cartItem = await db.cartItem.update({
+      where: {
+        id: cartItem.id,
+      },
+      data: {
+        amount: cartItem.amount + amount,
+      },
+    });
+  } else {
+    cartItem = await db.cartItem.create({
+      data: { amount, cartId, productId },
+    });
+  }
+};
+
+export const updateCart = async (cart: Cart) => {};
 
 export const addToCartAction = async (prevState: any, formData: FormData) => {
   const user = await getAuthUser();
@@ -458,6 +489,8 @@ export const addToCartAction = async (prevState: any, formData: FormData) => {
     const amount = Number(formData.get("amount"));
     await fetchProduct(productId);
     const cart = await fetchOrCreateCart({ userId: user.id });
+    await updateOrCreateCartItem(productId, cart.id, amount);
+    await updateCart(cart);
   } catch (error) {
     return renderError(error);
   }
