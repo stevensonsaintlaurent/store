@@ -516,7 +516,7 @@ export const addToCartAction = async (prevState: any, formData: FormData) => {
     await fetchProduct(productId);
     const cart = await fetchOrCreateCart({
       userId: user.id,
-      errorOnFailure: false, // i added this is not on it
+      // errorOnFailure: false, // i added this is not on it
     });
     await updateOrCreateCartItem({ productId, cartId: cart.id, amount });
     await updateCart(cart);
@@ -528,3 +528,7 @@ export const addToCartAction = async (prevState: any, formData: FormData) => {
 export const removeCartItemAction = async () => {};
 
 export const updateCartItemAction = async () => {};
+
+export const createOrderAction = async (prevState: any, formData: FormData) => {
+  return { message: "order created" };
+};
