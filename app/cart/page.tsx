@@ -8,7 +8,10 @@ import { redirect } from "next/navigation";
 const CartPage = async () => {
   const { userId } = await auth();
   if (!userId) redirect("/");
-  const previousCart = await fetchOrCreateCart({ userId });
+  const previousCart = await fetchOrCreateCart({
+    userId,
+    errorOnFailure: true, // i added this
+  });
   const { currentCart, cartItems } = await updateCart(previousCart);
   if (cartItems.length === 0) return <SectionTitle text="Empty Cart" />;
 
