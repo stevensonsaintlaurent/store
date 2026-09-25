@@ -6,11 +6,23 @@ import FormContainer from "../form/FormContainer";
 import { SubmitButton } from "../form/Buttons";
 import { removeCartItemAction, updateCartItemAction } from "@/utils/actions";
 import { Toast } from "../ui/toast";
+import { toast } from "@/components/ui/toast";
 
 const ThirdColumn = ({ quantity, id }: { quantity: number; id: string }) => {
   const [amount, setAmount] = useState(quantity);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleAmountChange = async (value: number) => {
+    setIsLoading(true);
+    toast.add({ description: "Calculating..." });
+    const result = await updateCartItemAction({
+      amount: value,
+      cartItemId: id,
+    });
+
     setAmount(value);
+    toast.add({ description: result.message });
+    setIsLoading(false);
   };
   return (
     <div className="md:ml-8">

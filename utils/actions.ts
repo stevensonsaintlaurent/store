@@ -486,6 +486,9 @@ export const updateCart = async (cart: Cart) => {
       cartId: cart.id,
     },
     include: { product: true },
+    orderBy: {
+      createdAt: "asc",
+    },
   });
   let numItemsInCart = 0;
   let cartTotal = 0;
@@ -505,7 +508,7 @@ export const updateCart = async (cart: Cart) => {
     data: { numItemsInCart, cartTotal, tax, orderTotal },
     include: includeProductClause,
   });
-  return currentCart;
+  return { cartItems, currentCart };
 };
 
 export const addToCartAction = async (prevState: any, formData: FormData) => {
@@ -550,7 +553,36 @@ export const removeCartItemAction = async (
   }
 };
 
-export const updateCartItemAction = async () => {};
+export const updateCartItemAction = async ({
+  amount,
+  cartItemId,
+}: {
+  amount: number;
+  cartItemId: string;
+}) => {
+  const user = await getAuthUser();
+
+  try {
+    const cart = await fetchOrCreateCart({
+      userId: user.id,
+      errorOnFailure: true,
+    });
+    await db.cartItem.update({
+      where: {
+        id: cartItemId,
+        cartId: cart.id,
+      },
+      data: {
+        amount,
+      },
+    });
+    await updateCart(cart);
+    revalidatePath("/cart");
+    return { message: "cart updated" };
+  } catch (error) {
+    return renderError(error);
+  }
+};
 
 export const createOrderAction = async (prevState: any, formData: FormData) => {
   return { message: "order created" };
