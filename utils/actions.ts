@@ -574,7 +574,7 @@ export const updateCartItemAction = async ({
 
 export const createOrderAction = async (prevState: any, formData: FormData) => {
   const user = await getAuthUser();
-  let userId: null | string = null;
+  let orderId: null | string = null;
   let cartId: null | string = null;
   try {
     const cart = await fetchOrCreateCart({
@@ -601,15 +601,12 @@ export const createOrderAction = async (prevState: any, formData: FormData) => {
         email: user.emailAddresses[0].emailAddress,
       },
     });
-    await db.cart.delete({
-      where: {
-        id: cart.id,
-      },
-    });
+
+    orderId = order.id;
   } catch (error) {
     return renderError(error);
   }
-  redirect("/orders");
+  redirect(`/checkout?orderId=${orderId}&cartId=${cartId}`);
 };
 
 export const fetchUserOrders = async () => {
