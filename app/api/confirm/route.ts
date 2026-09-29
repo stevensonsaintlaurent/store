@@ -11,10 +11,10 @@ export const GET = async (req: NextRequest) => {
 
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
+    console.log("session-control the id", session);
 
     const orderId = session.metadata?.orderId;
     const cartId = session.metadata?.cartId;
-
     if (session.status === "complete") {
       await db.order.update({
         where: {
@@ -24,20 +24,18 @@ export const GET = async (req: NextRequest) => {
           isPaid: true,
         },
       });
-
       await db.cart.delete({
         where: {
           id: cartId,
         },
       });
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return Response.json(null, {
       status: 500,
       statusText: "Internal Server Error",
     });
   }
-
   redirect("/orders");
 };
